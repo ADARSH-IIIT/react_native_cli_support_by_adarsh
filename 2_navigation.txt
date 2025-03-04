@@ -6,93 +6,74 @@ download packages of react native navigation native stack dependencies , bottom 
 
 
 
-
-import React, { useState } from 'react';
-import { View, Text, Button, TextInput } from 'react-native';
+import React from 'react';
+import { View, Text, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
+// Stack and Tab Navigators
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-const DetailStack = createNativeStackNavigator(); // New stack for nested navigation
 
-const HomeScreen = ({ navigation }) => {
-  const [input, setInput] = useState('');
+// Home Screen
+const HomeScreen = ({ navigation }) => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <Text>Home Screen</Text>
+    <Button title="Go to Screen 2" onPress={() => navigation.navigate('Screen2')} />
+    <Button title="Go to Screen 3" onPress={() => navigation.navigate('Screen3')} />
+  </View>
+);
 
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen</Text>
-      <TextInput
-        style={{
-          height: 40,
-          borderColor: 'gray',
-          borderWidth: 1,
-          width: 200,
-          marginVertical: 10,
-          paddingHorizontal: 10,
-        }}
-        placeholder="Enter something..."
-        value={input}
-        onChangeText={setInput}
-      />
-      <Button title="Go to Details" onPress={() => navigation.push('Detail')} />
-    </View>
-  );
-};
+// Screen 2
+const Screen2 = ({ navigation }) => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <Text>Screen 2</Text>
+    <Button title="Go to Screen 3" onPress={() => navigation.navigate('Screen3')} />
+  </View>
+);
 
-const Tab1 = ({ navigation }) => (
-  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+// Tab Screens inside Screen 3
+const Tab1 = () => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
     <Text>Tab 1</Text>
-    <Button title="Go to Home" onPress={() => navigation.goBack()} />
   </View>
 );
-
-const Tab2 = ({ navigation }) => (
-  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text>Tab 2</Text>
-    <Button title="Go to Project" onPress={() => navigation.navigate('Project')} />
+const Tab2 = () => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <Text>Tab 2 (Default Tab)</Text>
   </View>
 );
-
-const Tab3 = ( {navigation }) => (
-  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+const Tab3 = () => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
     <Text>Tab 3</Text>
-    <Button title="Go back" onPress={() => navigation.goBack()} />
-
   </View>
 );
 
-const ProjectScreen = () => (
-  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text>This is the Project Page</Text>
-  </View>
-);
-
-// Create a new stack inside DetailScreen
-const DetailStackScreen = () => (
-  <DetailStack.Navigator screenOptions={{ headerShown: false }}>
-    <DetailStack.Screen name="Tabs" component={DetailScreenTabs} />
-    <DetailStack.Screen name="Project" component={ProjectScreen} />
-  </DetailStack.Navigator>
-);
-
-// Tabs inside the Detail screen
-const DetailScreenTabs = () => (
-  <Tab.Navigator screenOptions={{ headerShown: false }}>
+// Tab Navigation inside Screen 3
+const Screen3Tabs = () => (
+  <Tab.Navigator initialRouteName="Tab2"     screenOptions={{headerShown : false }}> 
     <Tab.Screen name="Tab1" component={Tab1} />
     <Tab.Screen name="Tab2" component={Tab2} />
     <Tab.Screen name="Tab3" component={Tab3} />
   </Tab.Navigator>
 );
 
-export default function App() {
+// Stack Navigation
+const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false, animation: 'slide_from_left' }}>
+      <Stack.Navigator initialRouteName="Home"     screenOptions={{
+          headerShown: false,
+          animation: 'slide_from_right',        
+        }} >
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Detail" component={DetailStackScreen} /> 
+        <Stack.Screen name="Screen2" component={Screen2} />
+        <Stack.Screen name="Screen3" component={Screen3Tabs} />
       </Stack.Navigator>
     </NavigationContainer>
   );
-}
+};
+
+export default App;
+
